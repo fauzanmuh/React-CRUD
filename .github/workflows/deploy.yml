@@ -20,6 +20,10 @@ jobs:
         with:
           node-version: '14'
 
+      - run: npm install
+      - run: npm run build
+      - run: npm i react-router bootstrap reactstrap uuid
+
       - name: 'Write config'
         run: |
           mkdir ~/.oci
@@ -42,19 +46,15 @@ jobs:
         run: |
           oci setup repair-file-permissions --file /home/runner/.oci/config
           oci setup repair-file-permissions --file /home/runner/.oci/oci_api_key.pem
-      
-      - name: 'Install fn'
-        run: sudo curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
-
-      - name: 'Deploy and invoke function'
+      - name: 'Deploy Into Object Storage'
         run: |
-          fn create context z4nmuh --provider oracle-cs
-          fn use context z4nmuh
-          fn update context oracle.compartment-id ocid1.tenancy.oc1..aaaaaaaacijxtvpzccpzikjzwfb3zw6mpscemhz2kdfienj7vwuc4ltliq2q
-          fn update context api-url https://functions.ap-sydney-1.oci.oraclecloud.com
-          fn update context registry syd.ocir.io/sdzrwidjruyr/fauzanmuh
-          fn -v deploy --app node-app
-          fn invoke node-app react-crud
+          oci os object bulk-delete -bn ${{secrets.OCI_BUCKET}} --prefix static --force
+          oci os object put -bn ${{secrets.OCI_BUCKET}} --file ./build/manifest.json --content-type application/json --force
+          oci os object bulk-upload -bn ${{secrets.OCI_BUCKET}} --src-dir ./build --content-type text/html --include *.html --overwrite
+          oci os object bulk-upload -bn ${{secrets.OCI_BUCKET}} --src-dir ./build --content-type image/jpeg --include *.jpg --overwrite
+          oci os object bulk-upload -bn ${{secrets.OCI_BUCKET}} --src-dir ./build --content-type text/javascript --include *.js --overwrite
+          oci os object bulk-upload -bn ${{secrets.OCI_BUCKET}} --src-dir ./build --content-type text/css --include *.css --overwrite
+          oci os object bulk-upload -bn ${{secrets.OCI_BUCKET}} --src-dir ./build --content-type text/plain --exclude *.js --exclude *.html --exclude *.jpg --exclude *.css --exclude ./build/manifest.json --overwrite
 
       - name: 'Login to Dockerhub'
         uses: docker/login-action@v1
