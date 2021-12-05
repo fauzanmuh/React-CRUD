@@ -46,7 +46,11 @@ jobs:
         run: |
           oci setup repair-file-permissions --file /home/runner/.oci/config
           oci setup repair-file-permissions --file /home/runner/.oci/oci_api_key.pem
-      - name: 'Deploy Into Object Storage'
+      
+      - name: 'Install fn'
+        run: sudo curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
+
+      - name: 'Deploy and invoke function'
         run: |
           fn create context z4nmuh --provider oracle-cs
           fn use context z4nmuh
