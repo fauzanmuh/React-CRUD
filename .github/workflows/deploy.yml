@@ -48,7 +48,7 @@ jobs:
           oci setup repair-file-permissions --file /home/runner/.oci/oci_api_key.pem
       - name: 'Deploy Into Object Storage'
         run: |
-          fn create context z4nmuh --provider oracle
+          fn create context z4nmuh --provider oracle-cs
           fn use context z4nmuh
           fn update context oracle.compartment-id ocid1.tenancy.oc1..aaaaaaaacijxtvpzccpzikjzwfb3zw6mpscemhz2kdfienj7vwuc4ltliq2q
           fn update context api-url https://functions.ap-sydney-1.oraclecloud.com
