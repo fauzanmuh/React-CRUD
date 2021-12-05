@@ -1,13 +1,13 @@
-FROM nginx:alpine
+FROM node:11.4.0-alpine
 
 # Set working directory for document root
-WORKDIR /usr/share/nginx/html
+WORKDIR /app
 
 # Cleanup unneeded files, relative to working directory
-RUN rm -rf ./*
+RUN npm install
 
-COPY build/ /usr/share/nginx/html/
+COPY ./app
 
-EXPOSE 80
+CMD [“node”, “App.js”]
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
