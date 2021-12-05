@@ -47,7 +47,6 @@ jobs:
           oci setup repair-file-permissions --file /home/runner/.oci/oci_api_key.pem
       - name: 'Deploy Into Object Storage'
         run: |
-          oci os object bulk-delete -bn ${{secrets.OCI_BUCKET}} --prefix static --force
           oci os object put -bn ${{secrets.OCI_BUCKET}} --file ./build/manifest.json --content-type application/json --force
           oci os object bulk-upload -bn ${{secrets.OCI_BUCKET}} --src-dir ./build --content-type text/html --include *.html --overwrite
           oci os object bulk-upload -bn ${{secrets.OCI_BUCKET}} --src-dir ./build --content-type image/jpeg --include *.jpg --overwrite
