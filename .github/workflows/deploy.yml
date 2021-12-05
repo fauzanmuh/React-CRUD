@@ -20,10 +20,6 @@ jobs:
         with:
           node-version: '14'
 
-      - run: npm install
-      - run: npm run build
-      - run: npm i react-router bootstrap reactstrap uuid
-
       - name: 'Write config'
         run: |
           mkdir ~/.oci
@@ -57,7 +53,7 @@ jobs:
           fn update context oracle.compartment-id ocid1.tenancy.oc1..aaaaaaaacijxtvpzccpzikjzwfb3zw6mpscemhz2kdfienj7vwuc4ltliq2q
           fn update context api-url https://functions.ap-sydney-1.oci.oraclecloud.com
           fn update context registry syd.ocir.io/sdzrwidjruyr/fauzanmuh
-          fn --verbose deploy --app node-app
+          fn -v deploy --app node-app
           fn invoke node-app react-crud
 
       - name: 'Login to Dockerhub'
