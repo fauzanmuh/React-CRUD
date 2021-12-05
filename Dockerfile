@@ -1,13 +1,13 @@
 FROM node:11.4.0-alpine
 
-WORKDIR /src/app
+WORKDIR /src
 
 COPY package*.json ./
 
 RUN npm install
 
-COPY . /
+COPY . /src
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "./index.js" ]
 
 EXPOSE 3000
