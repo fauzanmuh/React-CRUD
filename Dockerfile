@@ -6,7 +6,7 @@ WORKDIR /app
 # Cleanup unneeded files, relative to working directory
 RUN npm install
 
-COPY ./app
+COPY . /app
 
 CMD [“node”, “App.js”]
 
